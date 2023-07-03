@@ -436,71 +436,71 @@ def orderHier(data, col1 = 1, col2 = None, col3 = None, col4 = None, col5 = None
     allDataframes = {}
     
     #Creating dataframes for the top level of the hierarchy (not total)
-for num in range(lengthList[orderList.index(1)]):
-    allDataframes[uniqueList[orderList.index(1)][num]] = data.loc[data[dimList[orderList.index(1)]] == uniqueList[orderList.index(1)][num]]
-    allDataframes[uniqueList[orderList.index(1)][num] + '1'] = (allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval])[numCol].sum()).to_frame()
+    for num in range(lengthList[orderList.index(1)]):
+        allDataframes[uniqueList[orderList.index(1)][num]] = data.loc[data[dimList[orderList.index(1)]] == uniqueList[orderList.index(1)][num]]
+        allDataframes[uniqueList[orderList.index(1)][num] + '1'] = (allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval])[numCol].sum()).to_frame()
 
-    if numIn > 1:
-        # Creating dataframes for the second level of the hierarchy
-        placeholder = allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval, dimList[orderList.index(2)]])[numCol].sum()
-        for ind in range(lengthList[orderList.index(2)]):
-            allDataframes[uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind]] = (placeholder.loc[(placeholder.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])]).to_frame()
+        if numIn > 1:
+            # Creating dataframes for the second level of the hierarchy
+            placeholder = allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval, dimList[orderList.index(2)]])[numCol].sum()
+            for ind in range(lengthList[orderList.index(2)]):
+                allDataframes[uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind]] = (placeholder.loc[(placeholder.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])]).to_frame()
 
-            if numIn > 2:
-                placeholder1 = allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval, dimList[orderList.index(2)], dimList[orderList.index(3)]])[numCol].sum()
-                # Creating dataframes for the third level of the hierarchy
-                for cnt in range(lengthList[orderList.index(3)]):
-                    allDataframes[uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind] + '_' + uniqueList[orderList.index(3)][cnt]] = (
-                        placeholder1.loc[(placeholder1.index.get_level_values(1) == uniqueList[orderList.index(2)][ind]) & (placeholder1.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])]
-                    ).to_frame()
+                if numIn > 2:
+                    placeholder1 = allDataframes[uniqueList[orderList.index(1)][num]].groupby([timeInterval, dimList[orderList.index(2)], dimList[orderList.index(3)]])[numCol].sum()
+                    # Creating dataframes for the third level of the hierarchy
+                    for cnt in range(lengthList[orderList.index(3)]):
+                        allDataframes[uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind] + '_' + uniqueList[orderList.index(3)][cnt]] = (
+                            placeholder1.loc[(placeholder1.index.get_level_values(1) == uniqueList[orderList.index(2)][ind]) & (placeholder1.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])]
+                        ).to_frame()
 
-                    if numIn > 3:
-                        placeholder2 = allDataframes[uniqueList[orderList.index(1)][num]].groupby(
-                            [timeInterval, dimList[orderList.index(2)], dimList[orderList.index(3)], dimList[orderList.index(4)]]
-                        )[numCol].sum()
-                        # Creating dataframes for the fourth level of the hierarchy
-                        for pos in range(lengthList[orderList.index(4)]):
-                            allDataframes[
-                                uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind] + '_' + uniqueList[orderList.index(3)][cnt] + '_' + uniqueList[orderList.index(4)][pos]
-                            ] = (
-                                placeholder2.loc[
-                                    (placeholder2.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])
-                                    & (placeholder2.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])
-                                    & (placeholder2.index.get_level_values(3) == uniqueList[orderList.index(4)][pos])
-                                ]
-                            ).to_frame()
-
-                            if numIn > 4:
-                                placeholder3 = allDataframes[uniqueList[orderList.index(1)][num]].groupby(
-                                    [
-                                        timeInterval,
-                                        dimList[orderList.index(2)],
-                                        dimList[orderList.index(3)],
-                                        dimList[orderList.index(4)],
-                                        dimList[orderList.index(5)],
+                        if numIn > 3:
+                            placeholder2 = allDataframes[uniqueList[orderList.index(1)][num]].groupby(
+                                [timeInterval, dimList[orderList.index(2)], dimList[orderList.index(3)], dimList[orderList.index(4)]]
+                            )[numCol].sum()
+                            # Creating dataframes for the fourth level of the hierarchy
+                            for pos in range(lengthList[orderList.index(4)]):
+                                allDataframes[
+                                    uniqueList[orderList.index(1)][num] + '_' + uniqueList[orderList.index(2)][ind] + '_' + uniqueList[orderList.index(3)][cnt] + '_' + uniqueList[orderList.index(4)][pos]
+                                ] = (
+                                    placeholder2.loc[
+                                        (placeholder2.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])
+                                        & (placeholder2.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])
+                                        & (placeholder2.index.get_level_values(3) == uniqueList[orderList.index(4)][pos])
                                     ]
-                                )[numCol].sum()
-                                # Creating dataframes for the fifth level of the hierarchy
-                                for i in range(lengthList[orderList.index(5)]):
-                                    allDataframes[
-                                        uniqueList[orderList.index(1)][num]
-                                        + '_'
-                                        + uniqueList[orderList.index(2)][ind]
-                                        + '_'
-                                        + uniqueList[orderList.index(3)][cnt]
-                                        + '_'
-                                        + uniqueList[orderList.index(4)][pos]
-                                        + '_'
-                                        + uniqueList[orderList.index(5)][i]
-                                    ] = (
-                                        placeholder3.loc[
-                                            (placeholder3.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])
-                                            & (placeholder3.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])
-                                            & (placeholder3.index.get_level_values(3) == uniqueList[orderList.index(4)][pos])
-                                            & (placeholder3.index.get_level_values(4) == uniqueList[orderList.index(5)][i])
+                                ).to_frame()
+
+                                if numIn > 4:
+                                    placeholder3 = allDataframes[uniqueList[orderList.index(1)][num]].groupby(
+                                        [
+                                            timeInterval,
+                                            dimList[orderList.index(2)],
+                                            dimList[orderList.index(3)],
+                                            dimList[orderList.index(4)],
+                                            dimList[orderList.index(5)],
                                         ]
-                                    ).to_frame()
-                    
+                                    )[numCol].sum()
+                                    # Creating dataframes for the fifth level of the hierarchy
+                                    for i in range(lengthList[orderList.index(5)]):
+                                        allDataframes[
+                                            uniqueList[orderList.index(1)][num]
+                                            + '_'
+                                            + uniqueList[orderList.index(2)][ind]
+                                            + '_'
+                                            + uniqueList[orderList.index(3)][cnt]
+                                            + '_'
+                                            + uniqueList[orderList.index(4)][pos]
+                                            + '_'
+                                            + uniqueList[orderList.index(5)][i]
+                                        ] = (
+                                            placeholder3.loc[
+                                                (placeholder3.index.get_level_values(1) == uniqueList[orderList.index(2)][ind])
+                                                & (placeholder3.index.get_level_values(2) == uniqueList[orderList.index(3)][cnt])
+                                                & (placeholder3.index.get_level_values(3) == uniqueList[orderList.index(4)][pos])
+                                                & (placeholder3.index.get_level_values(4) == uniqueList[orderList.index(5)][i])
+                                            ]
+                                        ).to_frame()
+                        
     #Creating total DataFrame
     allDataframes['Total'] = (data.groupby([timeInterval])[numCol].sum()).to_frame()
 
@@ -509,41 +509,41 @@ for num in range(lengthList[orderList.index(1)]):
     y = pd.merge(y, allDataframes['Total'], left_on = 'time', right_index = True)
     y.rename(columns = {numCol:'Total'}, inplace = True)
     
-for i in range(lengthList[orderList.index(1)]):
-    y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '1'], how='left', left_on='time', right_index=True)
-    y.rename(columns={numCol: uniqueList[orderList.index(1)][i]}, inplace=True)
-    
-    if numIn > 1:
-        for j in range(lengthList[orderList.index(2)]):
-            allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]].index.droplevel(1)
-            y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]], how='left', left_on='time', right_index=True)
-            y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]}, inplace=True)
-            
-            if numIn > 2:
-                for k in range(lengthList[orderList.index(3)]):
-                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index.droplevel(2)
-                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index.droplevel(1)
-                    y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]], how='left', left_on='time', right_index=True)
-                    y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]}, inplace=True)
-                    
-                    if numIn > 3:
-                        for l in range(lengthList[orderList.index(4)]):
-                            allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(3)
-                            allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(2)
-                            allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(1)
-                            y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]], how='left', left_on='time', right_index=True)
-                            y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]}, inplace=True)
-                            
-                            if numIn > 4:
-                                for m in range(lengthList[orderList.index(5)]):
-                                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(4)
-                                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(3)
-                                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(2)
-                                    allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(1)
-                                    y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]], how='left', left_on='time', right_index=True)
-                                    y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]}, inplace=True)
-    
-    
+    for i in range(lengthList[orderList.index(1)]):
+        y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '1'], how='left', left_on='time', right_index=True)
+        y.rename(columns={numCol: uniqueList[orderList.index(1)][i]}, inplace=True)
+        
+        if numIn > 1:
+            for j in range(lengthList[orderList.index(2)]):
+                allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]].index.droplevel(1)
+                y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]], how='left', left_on='time', right_index=True)
+                y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j]}, inplace=True)
+                
+                if numIn > 2:
+                    for k in range(lengthList[orderList.index(3)]):
+                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index.droplevel(2)
+                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]].index.droplevel(1)
+                        y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]], how='left', left_on='time', right_index=True)
+                        y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k]}, inplace=True)
+                        
+                        if numIn > 3:
+                            for l in range(lengthList[orderList.index(4)]):
+                                allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(3)
+                                allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(2)
+                                allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]].index.droplevel(1)
+                                y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]], how='left', left_on='time', right_index=True)
+                                y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l]}, inplace=True)
+                                
+                                if numIn > 4:
+                                    for m in range(lengthList[orderList.index(5)]):
+                                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(4)
+                                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(3)
+                                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(2)
+                                        allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index = allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]].index.droplevel(1)
+                                        y = pd.merge(y, allDataframes[uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]], how='left', left_on='time', right_index=True)
+                                        y.rename(columns={numCol: uniqueList[orderList.index(1)][i] + '_' + uniqueList[orderList.index(2)][j] + '_' + uniqueList[orderList.index(3)][k] + '_' + uniqueList[orderList.index(4)][l] + '_' + uniqueList[orderList.index(5)][m]}, inplace=True)
+        
+        
     if rmZeros == True:
         #Get rid of Missing columns and rows
         y.dropna(axis = 1, how = 'any', thresh = len(y['time'])/2, inplace = True)
