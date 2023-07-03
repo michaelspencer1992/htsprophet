@@ -319,68 +319,7 @@ def makeWeekly(data):
 
 #%% Create Ordering Function
 def orderHier(data, col1 = 1, col2 = None, col3 = None, col4 = None, col5 = None, rmZeros = False):
-    # 
-    #This function will order the hierarchy the way you like it as long as you are
-    #using max 5 layers
-    #
-    #
-    #Inputs and desc:
-    # 
-    # Data - (pandas DataFrame) the data you want made into a hierarchical model
-    #                           The first column should specify the time
-    #                           The middle columns should be the names of the layers of the hierarchy (ex. Medium, Platform, BusinessMarket, etc.)
-    #                           The last column should be the numeric column that you would like to forecast
-    #
-    # col1 - (int [1-5]) what layer you want the first column (thats not a timestamp) to be at
-    #           Layers:
-    #               1 - level right below total
-    #               2 - level below 1
-    #               3 - level below 2
-    #               4 - level below 3
-    #               5 - Bottom Level
-    #
-    # col2 - (int [1-5]) what layer you want the second column (thats not a timestamp) to be at
-    #           Layers:
-    #               1 - level right below total
-    #               2 - level below 1
-    #               3 - level below 2
-    #               4 - level below 3
-    #               5 - Bottom Level
-    #
-    # col3 - (int [1-5]) what layer you want the third column (thats not a timestamp) to be at
-    #           Layers:
-    #               1 - level right below total
-    #               2 - level below 1
-    #               3 - level below 2
-    #               4 - level below 3
-    #               5 - Bottom Level
-    #
-    # 
-    # col4 - (int [1-5]) what layer you want the fourth column (thats not a timestamp) to be at
-    #           Layers:
-    #               1 - level right below total
-    #               2 - level below 1
-    #               3 - level below 2
-    #               4 - level below 3
-    #               5 - Bottom Level
-    #
-    #
-    # col5 - (int [1-5]) what layer you want the fourth column (thats not a timestamp) to be at
-    #           Layers:
-    #               1 - level right below total
-    #               2 - level below 1
-    #               3 - level below 2
-    #               4 - level below 3
-    #               5 - Bottom Level
-    #
-    #
-    # Outputs and desc:
-    # 
-    # y - (pandas Dataframe) the DataFrame in a format that is consistent with the
-    #                        Hierarchy function and ordered in a way that the user
-    #                         specified.
-    #
-    #
+  
     if col1 not in [1,2,3,4,5]:
         sys.exit("col1 should equal 1, 2, 3, 4, or 5")
     if col2 is not None and col2 not in [1,2,3,4,5]:
