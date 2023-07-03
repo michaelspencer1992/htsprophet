@@ -16,6 +16,6 @@ setup(name = 'htsprophet',
               'matplotlib',
               'pandas>=0.18.1',
               'numpy',
-              'fbprophet>=0.2.0',
+              'prophet',
               'scikit-learn>=0.18'],
        )
